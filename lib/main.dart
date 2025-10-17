@@ -28,14 +28,7 @@ const useFirebaseOptions = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (useFirebaseOptions) {
-    // ignore: avoid_dynamic_calls
-    await Firebase.initializeApp();
-    // when firebase_options.dart is present this should be:
-    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp();
   runApp(const MainApp());
 }
 

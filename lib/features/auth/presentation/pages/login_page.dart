@@ -79,12 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                     label: _loading ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Continuar com Google'),
                     onPressed: _loading ? null : _handleGoogleSignIn,
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Entrar como visitante'),
-                ),
+                )
               ],
             ),
           ),

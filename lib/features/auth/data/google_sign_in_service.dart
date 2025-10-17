@@ -15,7 +15,6 @@ class GoogleSignInService {
     try {
       // ignore: avoid_print
       print('[GoogleSignInService] auth runtimeType: ${auth.runtimeType}');
-      
       final idToken = auth.idToken;
       final accessToken = auth.accessToken;
       // ignore: avoid_print

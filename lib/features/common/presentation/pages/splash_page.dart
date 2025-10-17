@@ -35,7 +35,6 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            // colors can't be const here because AppColors fields are not const; provide placeholders
             colors: [
               Color(0xFF7B2CBF),
               Color(0xFFFF6B6B),

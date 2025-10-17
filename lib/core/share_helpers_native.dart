@@ -7,7 +7,6 @@ Future<void> shareTextNative(String text) async {
   try {
     await SharePlus.instance.share(ShareParams(text: text));
   } catch (_) {
-    // ignore: deprecated_member_use
     await Share.share(text);
   }
 }
