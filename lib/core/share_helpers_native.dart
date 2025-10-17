@@ -1,0 +1,29 @@
+import 'dart:io';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+
+Future<void> shareTextNative(String text) async {
+  // Use top-level Share.share for reliable native sheet behavior across platforms.
+  // Although SharePlus.instance.share(ShareParams(...)) is the newer API,
+  // the top-level API reliably opens the platform share sheet for text.
+  await Share.share(text);
+}
+
+Future<void> shareImageNative(String imageUrl, {String? caption}) async {
+  final response = await http.get(Uri.parse(imageUrl));
+  if (response.statusCode != 200) throw Exception('Failed to download image');
+
+  final bytes = response.bodyBytes;
+  final tempDir = await getTemporaryDirectory();
+  final file = File(
+    '${tempDir.path}/shared_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+  );
+  await file.writeAsBytes(bytes);
+
+  if (caption != null && caption.isNotEmpty) {
+    await SharePlus.instance.share(ShareParams(text: caption, files: [XFile(file.path)]));
+  } else {
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
+  }
+}

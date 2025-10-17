@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/models/image_item.dart';
 import '../../../core/shared_store.dart';
+import '../../../core/share_helpers_native.dart';
 
 class ImageCard extends StatelessWidget {
   final ImageItem item;
@@ -28,9 +29,15 @@ class ImageCard extends StatelessWidget {
             top: 6,
             right: 6,
             child: IconButton(
-              onPressed: () {
-                SharedStore.instance.add(SharedEntry.image(item));
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Imagem adicionada aos compartilhados')));
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                try {
+                  await shareImageNative(item.url, caption: item.category);
+                  SharedStore.instance.add(SharedEntry.image(item));
+                  messenger.showSnackBar(const SnackBar(content: Text('Imagem compartilhada e salva')));
+                } catch (e) {
+                  messenger.showSnackBar(SnackBar(content: Text('Erro ao compartilhar: $e')));
+                }
               },
               icon: const Icon(Icons.share, color: Colors.white),
             ),

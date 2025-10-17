@@ -41,11 +41,6 @@ class PhrasesPage extends StatelessWidget {
                   itemBuilder: (context, i) {
                     return PhraseCard(
                       phrase: filtered[i],
-                      onShare: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Compartilhar: ${filtered[i].text}')),
-                        );
-                      },
                     );
                   },
                 ),
