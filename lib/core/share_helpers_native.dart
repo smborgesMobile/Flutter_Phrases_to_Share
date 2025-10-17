@@ -4,10 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 Future<void> shareTextNative(String text) async {
-  // Use top-level Share.share for reliable native sheet behavior across platforms.
-  // Although SharePlus.instance.share(ShareParams(...)) is the newer API,
-  // the top-level API reliably opens the platform share sheet for text.
-  await Share.share(text);
+  try {
+    // Preferred modern API
+    await SharePlus.instance.share(ShareParams(text: text));
+  } catch (_) {
+    // If SharePlus.instance fails for any reason, fall back to top-level API for reliability.
+    // ignore: deprecated_member_use
+    await Share.share(text);
+  }
 }
 
 Future<void> shareImageNative(String imageUrl, {String? caption}) async {
