@@ -17,6 +17,7 @@ import 'features/images/data/datasources/images_remote_data_source.dart';
 import 'features/images/data/repositories/images_repository_impl.dart';
 import 'features/images/domain/usecases/get_images.dart';
 import 'features/phrases/presentation/pages/phrases_page.dart';
+import 'features/common/presentation/pages/splash_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -33,6 +34,7 @@ class _MainAppState extends State<MainApp> {
   int _selectedIndex = 0;
   late final PhrasesCubit _cubit;
   late final ImagesCubit _imagesCubit;
+  bool _showSplash = true;
 
   void _onNavItemSelected(int index) {
     setState(() => _selectedIndex = index);
@@ -61,6 +63,12 @@ class _MainAppState extends State<MainApp> {
     final imagesUsecase = makeGetImages(imagesRepo);
     _imagesCubit = ImagesCubit(getImages: imagesUsecase);
     _imagesCubit.fetch();
+
+    // Keep the splash screen visible briefly while initial fetches run.
+    Future.delayed(const Duration(milliseconds: 1600), () {
+      if (!mounted) return;
+      setState(() => _showSplash = false);
+    });
   }
 
   @override
@@ -77,15 +85,17 @@ class _MainAppState extends State<MainApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(primaryColor: AppColors.primary),
-      home: Scaffold(
-        appBar: AppBarWidget(userName: "Sérgio"),
-        // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
-        body: IndexedStack(index: _selectedIndex, children: bodies),
-        bottomNavigationBar: BottomNavigationWidget(
-          initialIndex: _selectedIndex,
-          onItemSelected: _onNavItemSelected,
-        ),
-      ),
+      home: _showSplash
+          ? const SplashPage()
+          : Scaffold(
+              appBar: AppBarWidget(userName: "Sérgio"),
+              // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
+              body: IndexedStack(index: _selectedIndex, children: bodies),
+              bottomNavigationBar: BottomNavigationWidget(
+                initialIndex: _selectedIndex,
+                onItemSelected: _onNavItemSelected,
+              ),
+            ),
     );
   }
 
