@@ -13,12 +13,10 @@ Future<void> shareTextToWhatsApp(String text) async {
     await launchUrl(schemeUrl);
     return;
   }
-  // Last resort: try to open a generic URL (may fail if WhatsApp not installed)
   throw Exception('Could not launch WhatsApp');
 }
 
 Future<void> shareImageUrlToWhatsApp(String imageUrl, [String? caption]) async {
-  // WhatsApp doesn't accept image URL directly via wa.me; include url in text
   final text = '${caption ?? ''}\n$imageUrl';
   return shareTextToWhatsApp(text);
 }

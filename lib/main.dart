@@ -24,9 +24,6 @@ import 'features/auth/data/auth_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 
-// If you run `flutterfire configure` this file will be generated and you can set
-// useFirebaseOptions = true to initialize with DefaultFirebaseOptions.currentPlatform
-// import 'firebase_options.dart';
 const useFirebaseOptions = false;
 
 Future<void> main() async {
@@ -64,10 +61,10 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    // Try load saved user
+    
     _loadSavedUser();
 
-    // Use a mock backend payload until the real backend is ready
+    
     final jsonPayload = getMockPhrasesJson();
   final imagesJson = getMockImagesJson();
 
@@ -80,14 +77,14 @@ class _MainAppState extends State<MainApp> {
     _cubit = PhrasesCubit(getPhrases: usecase);
     _cubit.fetch();
 
-    // Images cubit
+    
     final imagesRemote = ImagesRemoteDataSourceImpl();
     final imagesRepo = ImagesRepositoryImpl(remote: imagesRemote, jsonPayload: imagesJson);
     final imagesUsecase = makeGetImages(imagesRepo);
     _imagesCubit = ImagesCubit(getImages: imagesUsecase);
     _imagesCubit.fetch();
 
-    // Keep the splash screen visible briefly while initial fetches run.
+    
     Future.delayed(const Duration(milliseconds: 1600), () {
       if (!mounted) return;
       setState(() => _showSplash = false);

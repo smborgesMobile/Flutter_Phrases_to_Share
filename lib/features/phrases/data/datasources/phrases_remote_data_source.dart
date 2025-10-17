@@ -3,7 +3,6 @@ import 'dart:convert';
 import '../models/phrase_model.dart';
 
 abstract class PhrasesRemoteDataSource {
-  /// Fetches raw JSON from backend and returns list of PhraseModel
   Future<List<PhraseModel>> fetchPhrasesFromJson(String jsonString);
 }
 

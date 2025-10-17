@@ -11,16 +11,13 @@ class GoogleSignInService {
     final account = await _googleSignIn.signIn();
     if (account == null) throw Exception('Login cancelled or failed');
 
-    // Obtain auth details from the request and log types to detect pigeon/platform issues
     final auth = await account.authentication;
     try {
-      // defensive logging
       // ignore: avoid_print
       print('[GoogleSignInService] auth runtimeType: ${auth.runtimeType}');
-      // The auth object should expose idToken and accessToken as Strings
+      
       final idToken = auth.idToken;
       final accessToken = auth.accessToken;
-      // log the runtime types of the fields
       // ignore: avoid_print
       print('[GoogleSignInService] idToken type: ${idToken?.runtimeType}, accessToken type: ${accessToken?.runtimeType}');
 
@@ -61,7 +58,6 @@ class GoogleSignInService {
         print('[GoogleSignInService] Firebase signIn failed: $firebaseError');
         // ignore: avoid_print
         print(firebaseStack);
-        // Fallback: return AuthUser from Google account information
         return AuthUser(
           id: account.id,
           name: account.displayName ?? account.email.split('@').first,
@@ -70,7 +66,6 @@ class GoogleSignInService {
         );
       }
     } catch (e, st) {
-      // provide a helpful message including the runtime types observed to help debug pigeon errors
       // ignore: avoid_print
       print('[GoogleSignInService] signIn error: $e');
       // ignore: avoid_print

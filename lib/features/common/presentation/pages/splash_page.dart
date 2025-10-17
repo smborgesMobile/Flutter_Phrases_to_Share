@@ -49,7 +49,6 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Lottie animation (network) - small subtle animation
                   SizedBox(
                     width: 140,
                     height: 140,
@@ -57,7 +56,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                       'https://assets7.lottiefiles.com/packages/lf20_tll0j4bb.json',
                       fit: BoxFit.contain,
                       repeat: true,
-                      // provide a tiny placeholder while loading
+                      
                       frameBuilder: (context, child, composition) {
                         if (composition == null) return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white70)));
                         return child;

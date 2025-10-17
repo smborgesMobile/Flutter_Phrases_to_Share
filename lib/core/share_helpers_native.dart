@@ -5,10 +5,8 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> shareTextNative(String text) async {
   try {
-    // Preferred modern API
     await SharePlus.instance.share(ShareParams(text: text));
   } catch (_) {
-    // If SharePlus.instance fails for any reason, fall back to top-level API for reliability.
     // ignore: deprecated_member_use
     await Share.share(text);
   }
