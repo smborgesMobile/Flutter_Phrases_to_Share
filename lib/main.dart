@@ -38,6 +38,7 @@ class _MainAppState extends State<MainApp> {
     final bodies = [
       // Home -> lista de frases
       ListView.builder(
+        key: const PageStorageKey('homeList'),
         padding: const EdgeInsets.only(top: 8, bottom: 8),
         itemCount: samplePhrases.length,
         itemBuilder: (context, i) {
@@ -60,7 +61,11 @@ class _MainAppState extends State<MainApp> {
       theme: ThemeData(primaryColor: AppColors.primary),
       home: Scaffold(
         appBar: AppBarWidget(userName: "Sérgio"),
-        body: bodies[_selectedIndex],
+        // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: bodies,
+        ),
         bottomNavigationBar: BottomNavigationWidget(
           initialIndex: _selectedIndex,
           onItemSelected: _onNavItemSelected,
