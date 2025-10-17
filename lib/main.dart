@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:phrases_to_share/features/images/presentation/pages/images_page.dart';
 import 'package:phrases_to_share/features/phrases/presentation/pages/share_page.dart';
 import 'package:phrases_to_share/shared/themes/app_colors.dart';
@@ -20,8 +21,24 @@ import 'features/common/presentation/pages/splash_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/domain/auth_user.dart';
 import 'features/auth/data/auth_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:google_sign_in/google_sign_in.dart';
 
-void main() {
+// If you run `flutterfire configure` this file will be generated and you can set
+// useFirebaseOptions = true to initialize with DefaultFirebaseOptions.currentPlatform
+// import 'firebase_options.dart';
+const useFirebaseOptions = false;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (useFirebaseOptions) {
+    // ignore: avoid_dynamic_calls
+    await Firebase.initializeApp();
+    // when firebase_options.dart is present this should be:
+    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(const MainApp());
 }
 
@@ -114,8 +131,8 @@ class _MainAppState extends State<MainApp> {
                     });
                   },
                 )
-              : Scaffold(
-                  appBar: AppBarWidget(userName: _user?.name ?? "Sérgio"),
+                : Scaffold(
+                  appBar: AppBarWidget(userName: _user?.name ?? "Sérgio", onLogout: _handleLogout),
                   // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
                   body: IndexedStack(index: _selectedIndex, children: bodies),
                   bottomNavigationBar: BottomNavigationWidget(
@@ -131,5 +148,20 @@ class _MainAppState extends State<MainApp> {
     _cubit.close();
     _imagesCubit.close();
     super.dispose();
+  }
+
+  Future<void> _handleLogout() async {
+    try {
+      await fb_auth.FirebaseAuth.instance.signOut();
+    } catch (_) {}
+    try {
+      await GoogleSignIn().signOut();
+    } catch (_) {}
+    await _authStorage.clear();
+    if (!mounted) return;
+    setState(() {
+      _user = null;
+      _selectedIndex = 1;
+    });
   }
 }

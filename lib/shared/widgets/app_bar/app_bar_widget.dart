@@ -5,8 +5,9 @@ import 'package:phrases_to_share/shared/themes/app_colors.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
   final String? photo;
+  final VoidCallback? onLogout;
 
-  const AppBarWidget({super.key, required this.userName, this.photo});
+  const AppBarWidget({super.key, required this.userName, this.photo, this.onLogout});
 
   @override
   Size get preferredSize => const Size.fromHeight(128);
@@ -40,6 +41,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               const SizedBox.shrink(),
             ],
           ),
+          trailing: onLogout != null
+              ? IconButton(
+                  onPressed: onLogout,
+                  icon: const Icon(Icons.logout, color: Colors.white),
+                )
+              : null,
         ),
       ),
     );

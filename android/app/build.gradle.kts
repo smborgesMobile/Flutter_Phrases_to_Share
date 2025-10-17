@@ -42,3 +42,6 @@ android {
 flutter {
     source = "../.."
 }
+
+// Apply Google Services plugin to generate Firebase resources from google-services.json
+apply(plugin = "com.google.gms.google-services")
