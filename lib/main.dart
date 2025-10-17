@@ -3,6 +3,7 @@ import 'package:phrases_to_share/shared/themes/app_colors.dart';
 import 'package:phrases_to_share/shared/widgets/app_bar/app_bar_widget.dart';
 import 'package:phrases_to_share/shared/widgets/bottom_navigation/bottom_navigation_widget.dart';
 import 'package:phrases_to_share/shared/widgets/phrase_card/phrase_card.dart';
+import 'package:phrases_to_share/l10n/app_localizations.dart';
 
 void main() {
   runApp(const MainApp());
@@ -58,6 +59,8 @@ class _MainAppState extends State<MainApp> {
     ];
 
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(primaryColor: AppColors.primary),
       home: Scaffold(
         appBar: AppBarWidget(userName: "Sérgio"),

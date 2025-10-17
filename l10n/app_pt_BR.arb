@@ -1,0 +1,14 @@
+{
+  "@@locale": "pt_BR",
+  "hello": "Olá",
+  "greeting": "Olá {name}!",
+  "@greeting": {
+    "description": "Greet the user by name",
+    "placeholders": { "name": {} }
+  },
+  "items": "{count, plural, =0{Nenhum item} =1{1 item} other{{count} itens}}",
+  "@items": {
+    "description": "Number of items",
+    "placeholders": { "count": {} }
+  }
+}
