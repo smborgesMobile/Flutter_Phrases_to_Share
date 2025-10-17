@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../models/phrase.dart';
 
 class PhraseCard extends StatelessWidget {
-  final String phrase;
+  final Phrase phrase;
   final VoidCallback? onShare;
   final VoidCallback? onCopy;
 
@@ -16,7 +17,7 @@ class PhraseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void defaultCopy() {
-      Clipboard.setData(ClipboardData(text: phrase));
+      Clipboard.setData(ClipboardData(text: phrase.text));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Copiado para a área de transferência')),
       );
@@ -31,7 +32,7 @@ class PhraseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(phrase, style: Theme.of(context).textTheme.bodyMedium),
+            Text(phrase.text, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
