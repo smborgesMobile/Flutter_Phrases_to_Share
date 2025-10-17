@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/phrase.dart';
+import '../../../core/shared_store.dart';
 
 class PhraseCard extends StatelessWidget {
   final Phrase phrase;
@@ -44,7 +45,12 @@ class PhraseCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 TextButton.icon(
-                  onPressed: onShare,
+                  onPressed: onShare ?? () {
+                    SharedStore.instance.add(SharedEntry.phrase(phrase));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Adicionado aos compartilhados')),
+                    );
+                  },
                   icon: const Icon(Icons.share_outlined),
                   label: const Text('Compartilhar'),
                 ),

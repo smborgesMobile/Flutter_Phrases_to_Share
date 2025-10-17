@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phrases_to_share/features/phrases/presentation/pages/home_page.dart';
+import 'package:phrases_to_share/features/images/presentation/pages/images_page.dart';
 import 'package:phrases_to_share/features/phrases/presentation/pages/share_page.dart';
+// import 'package:phrases_to_share/features/phrases/presentation/pages/home_page.dart'; // Removed unused import
 import 'package:phrases_to_share/shared/themes/app_colors.dart';
 import 'package:phrases_to_share/shared/widgets/app_bar/app_bar_widget.dart';
 import 'package:phrases_to_share/shared/widgets/bottom_navigation/bottom_navigation_widget.dart';
@@ -11,6 +12,10 @@ import 'features/phrases/data/repositories/phrases_repository_impl.dart';
 import 'features/phrases/domain/usecases/get_phrases.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/phrases/presentation/cubit/phrases_cubit.dart';
+import 'features/images/presentation/cubit/images_cubit.dart';
+import 'features/images/data/datasources/images_remote_data_source.dart';
+import 'features/images/data/repositories/images_repository_impl.dart';
+import 'features/images/domain/usecases/get_images.dart';
 import 'features/phrases/presentation/pages/phrases_page.dart';
 
 void main() {
@@ -27,6 +32,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   int _selectedIndex = 0;
   late final PhrasesCubit _cubit;
+  late final ImagesCubit _imagesCubit;
 
   void _onNavItemSelected(int index) {
     setState(() => _selectedIndex = index);
@@ -38,6 +44,7 @@ class _MainAppState extends State<MainApp> {
 
     // Use a mock backend payload until the real backend is ready
     final jsonPayload = getMockPhrasesJson();
+  final imagesJson = getMockImagesJson();
 
     final remote = PhrasesRemoteDataSourceImpl();
     final repo = PhrasesRepositoryImpl(
@@ -47,13 +54,21 @@ class _MainAppState extends State<MainApp> {
     final usecase = GetPhrases(repo);
     _cubit = PhrasesCubit(getPhrases: usecase);
     _cubit.fetch();
+
+    // Images cubit
+    final imagesRemote = ImagesRemoteDataSourceImpl();
+    final imagesRepo = ImagesRepositoryImpl(remote: imagesRemote, jsonPayload: imagesJson);
+    final imagesUsecase = makeGetImages(imagesRepo);
+    _imagesCubit = ImagesCubit(getImages: imagesUsecase);
+    _imagesCubit.fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     final bodies = [
-      HomePage(),
-      // Home page (provided cubit)
+      // Images tab
+      BlocProvider.value(value: _imagesCubit, child: ImagesPage()),
+      // Frases tab (provided cubit)
       BlocProvider.value(value: _cubit, child: PhrasesPage()),
       SharePage(),
     ];
@@ -77,6 +92,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void dispose() {
     _cubit.close();
+    _imagesCubit.close();
     super.dispose();
   }
 }

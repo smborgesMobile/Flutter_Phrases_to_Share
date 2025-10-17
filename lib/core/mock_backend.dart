@@ -11,3 +11,17 @@ String getMockPhrasesJson() {
   }
   ''';
 }
+
+String getMockImagesJson() {
+  return '''
+  {
+    "images": [
+      {"url": "https://picsum.photos/400?image=10", "category": "Paisagem"},
+      {"url": "https://picsum.photos/400?image=20", "category": "Animais"},
+      {"url": "https://picsum.photos/400?image=30", "category": "Paisagem"},
+      {"url": "https://picsum.photos/400?image=40", "category": "Arte"},
+      {"url": "https://picsum.photos/400?image=50", "category": "Animais"}
+    ]
+  }
+  ''';
+}
