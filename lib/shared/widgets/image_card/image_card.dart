@@ -14,7 +14,12 @@ class ImageCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(item.url, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image))),
+          Image.network(
+            item.url,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) =>
+                const Center(child: Icon(Icons.broken_image)),
+          ),
           Positioned(
             bottom: 6,
             left: 6,
@@ -22,7 +27,10 @@ class ImageCard extends StatelessWidget {
             child: Container(
               color: Colors.black54,
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: Text(item.category, style: const TextStyle(color: Colors.white, fontSize: 12)),
+              child: Text(
+                item.category,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
           ),
           Positioned(
@@ -34,9 +42,15 @@ class ImageCard extends StatelessWidget {
                 try {
                   await shareImageNative(item.url, caption: item.category);
                   SharedStore.instance.add(SharedEntry.image(item));
-                  messenger.showSnackBar(const SnackBar(content: Text('Imagem compartilhada e salva')));
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Imagem compartilhada e salva'),
+                    ),
+                  );
                 } catch (e) {
-                  messenger.showSnackBar(SnackBar(content: Text('Erro ao compartilhar: $e')));
+                  messenger.showSnackBar(
+                    SnackBar(content: Text('Erro ao compartilhar: $e')),
+                  );
                 }
               },
               icon: const Icon(Icons.share, color: Colors.white),
