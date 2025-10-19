@@ -24,6 +24,7 @@ dependencies:
   firebase_core: ^2.32.0
   firebase_auth: ^4.6.0
   firebase_remote_config: ^4.0.0
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import '../../../../shared/models/image_item.dart';
 import '../../../../core/share_helpers_native.dart';
 import '../../../../core/shared_store.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImagePreviewPage extends StatefulWidget {
   final ImageItem item;
@@ -58,10 +59,11 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
         child: InteractiveViewer(
           child: Hero(
             tag: item.url,
-            child: Image.network(
-              item.url,
+            child: CachedNetworkImage(
+              imageUrl: item.url,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white, size: 64),
+              placeholder: (_, __) => const Center(child: CircularProgressIndicator()),
+              errorWidget: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white, size: 64),
             ),
           ),
         ),

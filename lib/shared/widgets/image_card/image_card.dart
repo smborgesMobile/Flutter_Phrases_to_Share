@@ -3,6 +3,7 @@ import '../../../shared/models/image_item.dart';
 import '../../../core/shared_store.dart';
 import '../../../core/share_helpers_native.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../features/images/presentation/pages/image_preview_page.dart';
 
 class ImageCard extends StatefulWidget {
@@ -30,10 +31,11 @@ class _ImageCardState extends State<ImageCard> {
             },
             child: Hero(
               tag: item.url,
-              child: Image.network(
-                item.url,
+              child: CachedNetworkImage(
+                imageUrl: item.url,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
+                placeholder: (_, __) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                errorWidget: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
               ),
             ),
           ),
