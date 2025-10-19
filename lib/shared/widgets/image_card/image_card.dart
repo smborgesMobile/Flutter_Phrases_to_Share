@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/models/image_item.dart';
 import '../../../core/shared_store.dart';
 import '../../../core/share_helpers_native.dart';
+import '../../../../features/images/presentation/pages/image_preview_page.dart';
 
 class ImageCard extends StatelessWidget {
   final ImageItem item;
@@ -14,11 +15,19 @@ class ImageCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
-            item.url,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) =>
-                const Center(child: Icon(Icons.broken_image)),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => ImagePreviewPage(item: item)));
+            },
+            child: Hero(
+              tag: item.url,
+              child: Image.network(
+                item.url,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    const Center(child: Icon(Icons.broken_image)),
+              ),
+            ),
           ),
           Positioned(
             bottom: 6,
