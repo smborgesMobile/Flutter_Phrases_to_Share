@@ -1,7 +1,7 @@
 name: phrases_to_share
 description: "A new Flutter project."
 publish_to: 'none'
-version: 2.0.0+1
+version: 2.0.0+38
 
 environment:
   sdk: ^3.9.2

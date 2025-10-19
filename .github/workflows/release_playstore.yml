@@ -58,11 +58,11 @@ jobs:
       - name: Build Android App Bundle (AAB)
         run: flutter build appbundle --release
 
-      - name: Upload to Play Store (Open testing)
+      - name: Upload to Play Store (internal testing)
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.smborges.phrases_to_share
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: open
+          track: internal
           status: completed
