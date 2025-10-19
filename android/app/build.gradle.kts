@@ -40,16 +40,14 @@ android {
         keystoreProperties.load(FileInputStream(keystorePropertiesFile))
     }
 
-    signingConfigs {
-        create("release") {
-            if (keystorePropertiesFile.exists()) {
+    if (keystorePropertiesFile.exists()) {
+        signingConfigs {
+            create("release") {
                 keyAlias = keystoreProperties.getProperty("keyAlias")
                 keyPassword = keystoreProperties.getProperty("keyPassword")
-                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                val storeFilePath = keystoreProperties.getProperty("storeFile")
+                storeFile = if (storeFilePath.startsWith("/")) file(storeFilePath) else file(rootProject.file(storeFilePath))
                 storePassword = keystoreProperties.getProperty("storePassword")
-            } else {
-                // if no keystore provided, fall back to debug signing
-                useDebugSigning()
             }
         }
     }
