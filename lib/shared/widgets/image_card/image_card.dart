@@ -2,15 +2,24 @@ import 'package:flutter/material.dart';
 import '../../../shared/models/image_item.dart';
 import '../../../core/shared_store.dart';
 import '../../../core/share_helpers_native.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../../features/images/presentation/pages/image_preview_page.dart';
 
-class ImageCard extends StatelessWidget {
+class ImageCard extends StatefulWidget {
   final ImageItem item;
 
   const ImageCard({super.key, required this.item});
 
   @override
+  State<ImageCard> createState() => _ImageCardState();
+}
+
+class _ImageCardState extends State<ImageCard> {
+  bool _isSharing = false;
+
+  @override
   Widget build(BuildContext context) {
+    final item = widget.item;
     return Card(
       child: Stack(
         fit: StackFit.expand,
@@ -24,8 +33,7 @@ class ImageCard extends StatelessWidget {
               child: Image.network(
                 item.url,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) =>
-                    const Center(child: Icon(Icons.broken_image)),
+                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
               ),
             ),
           ),
@@ -42,28 +50,42 @@ class ImageCard extends StatelessWidget {
               ),
             ),
           ),
+          // Share button
           Positioned(
             top: 6,
             right: 6,
-            child: IconButton(
-              onPressed: () async {
-                final messenger = ScaffoldMessenger.of(context);
-                try {
-                  await shareImageNative(item.url, caption: "");
-                  SharedStore.instance.add(SharedEntry.image(item));
-                  messenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Imagem compartilhada e salva'),
+            child: _isSharing
+                ? const SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2.5, valueColor: AlwaysStoppedAnimation(Colors.white)),
                     ),
-                  );
-                } catch (e) {
-                  messenger.showSnackBar(
-                    SnackBar(content: Text('Erro ao compartilhar: $e')),
-                  );
-                }
-              },
-              icon: const Icon(Icons.share, color: Colors.white),
-            ),
+                  )
+                : IconButton(
+                    onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+                      setState(() => _isSharing = true);
+                      try {
+                        final file = await prepareSharedImageFile(item.url);
+                        // call share with file
+                        await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
+                        SharedStore.instance.add(SharedEntry.image(item));
+                        messenger.showSnackBar(
+                          const SnackBar(
+                            content: Text('Imagem compartilhada e salva'),
+                          ),
+                        );
+                      } catch (e) {
+                        messenger.showSnackBar(
+                          SnackBar(content: Text('Erro ao compartilhar: $e')),
+                        );
+                      } finally {
+                        if (mounted) setState(() => _isSharing = false);
+                      }
+                    },
+                    icon: const Icon(Icons.share, color: Colors.white),
+                  ),
           ),
         ],
       ),
