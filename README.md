@@ -122,3 +122,13 @@ If you want, I can also add a short CONTRIBUTING.md and a checklist for Play Sto
 # phrases_to_share
 
 A new Flutter project.
+
+
+## Screenshots
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/user-attachments/assets/538c0c56-785a-4bf1-bdba-59db9945b2db" alt="Screenshot_20251018_224948" width="30%" />
+  <img src="https://github.com/user-attachments/assets/af7709c4-71fb-4f6d-8ed1-6a30f18f6219" alt="Screenshot_20251018_224929" width="30%" />
+  <img src="https://github.com/user-attachments/assets/511f56e7-73e1-4af6-9ec0-4732794f3506" alt="Screenshot_20251018_224920" width="30%" />
+</div>
+
+
