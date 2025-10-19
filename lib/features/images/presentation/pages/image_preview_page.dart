@@ -25,7 +25,7 @@ class ImagePreviewPage extends StatelessWidget {
             onPressed: () async {
               final messenger = ScaffoldMessenger.of(context);
               try {
-                await shareImageNative(item.url, caption: item.category);
+                await shareImageNative(item.url, caption: "");
                 SharedStore.instance.add(SharedEntry.image(item));
               } catch (e) {
                 messenger.showSnackBar(SnackBar(content: Text('Erro ao compartilhar: $e')));
