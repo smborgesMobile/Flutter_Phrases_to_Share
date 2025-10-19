@@ -117,13 +117,6 @@ This project includes `google-services.json` files for Firebase integration. If 
 
 Project created and maintained by the app author. Assets were generated programmatically with Python + Pillow scripts.
 
----
-If you want, I can also add a short CONTRIBUTING.md and a checklist for Play Store release steps (metadata, screenshots, AAB upload, staged rollout). Want me to add that next?
-# phrases_to_share
-
-A new Flutter project.
-
-
 ## Screenshots
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
   <img src="https://github.com/user-attachments/assets/538c0c56-785a-4bf1-bdba-59db9945b2db" alt="Screenshot_20251018_224948" width="30%" />
