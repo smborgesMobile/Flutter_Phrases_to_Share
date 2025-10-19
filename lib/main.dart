@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/config/data/remote_config_service.dart';
 import 'package:phrases_to_share/features/images/presentation/pages/images_page.dart';
 import 'package:phrases_to_share/features/phrases/presentation/pages/share_page.dart';
 import 'package:phrases_to_share/shared/themes/app_colors.dart';
@@ -29,6 +30,14 @@ const useFirebaseOptions = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // attempt to fetch remote config and override local mocks if provided
+  try {
+    final rc = await RemoteConfigService.create();
+    if (rc.phrasesJson.isNotEmpty) setOverridePhrasesJson(rc.phrasesJson);
+    if (rc.imagesJson.isNotEmpty) setOverrideImagesJson(rc.imagesJson);
+  } catch (_) {}
+
   runApp(const MainApp());
 }
 
@@ -54,12 +63,10 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    
     _loadSavedUser();
 
-    
     final jsonPayload = getMockPhrasesJson();
-  final imagesJson = getMockImagesJson();
+    final imagesJson = getMockImagesJson();
 
     final remote = PhrasesRemoteDataSourceImpl();
     final repo = PhrasesRepositoryImpl(
@@ -70,14 +77,15 @@ class _MainAppState extends State<MainApp> {
     _cubit = PhrasesCubit(getPhrases: usecase);
     _cubit.fetch();
 
-    
     final imagesRemote = ImagesRemoteDataSourceImpl();
-    final imagesRepo = ImagesRepositoryImpl(remote: imagesRemote, jsonPayload: imagesJson);
+    final imagesRepo = ImagesRepositoryImpl(
+      remote: imagesRemote,
+      jsonPayload: imagesJson,
+    );
     final imagesUsecase = makeGetImages(imagesRepo);
     _imagesCubit = ImagesCubit(getImages: imagesUsecase);
     _imagesCubit.fetch();
 
-    
     Future.delayed(const Duration(milliseconds: 1600), () {
       if (!mounted) return;
       setState(() => _showSplash = false);
@@ -111,25 +119,28 @@ class _MainAppState extends State<MainApp> {
       home: _showSplash
           ? const SplashPage()
           : (_user == null
-              ? LoginPage(
-                  onSignedIn: (user) async {
-                    await _authStorage.saveUser(user);
-                    if (!mounted) return;
-                    setState(() {
-                      _user = user;
-                      _selectedIndex = 1; // show Phrases tab after sign-in
-                    });
-                  },
-                )
+                ? LoginPage(
+                    onSignedIn: (user) async {
+                      await _authStorage.saveUser(user);
+                      if (!mounted) return;
+                      setState(() {
+                        _user = user;
+                        _selectedIndex = 1; // show Phrases tab after sign-in
+                      });
+                    },
+                  )
                 : Scaffold(
-                  appBar: AppBarWidget(userName: _user?.name ?? "Sérgio", onLogout: _handleLogout),
-                  // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
-                  body: IndexedStack(index: _selectedIndex, children: bodies),
-                  bottomNavigationBar: BottomNavigationWidget(
-                    initialIndex: _selectedIndex,
-                    onItemSelected: _onNavItemSelected,
-                  ),
-                )),
+                    appBar: AppBarWidget(
+                      userName: _user?.name ?? "Sérgio",
+                      onLogout: _handleLogout,
+                    ),
+                    // Keep pages mounted so their state (e.g. scroll) is preserved when switching tabs.
+                    body: IndexedStack(index: _selectedIndex, children: bodies),
+                    bottomNavigationBar: BottomNavigationWidget(
+                      initialIndex: _selectedIndex,
+                      onItemSelected: _onNavItemSelected,
+                    ),
+                  )),
     );
   }
 

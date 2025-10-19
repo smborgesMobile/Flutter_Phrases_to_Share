@@ -1,8 +1,8 @@
 String getMockPhrasesJson() {
-  return '''
+  return _overridePhrasesJson ?? '''
   {
     "phrases": [
-      {"text": "A vida é feita de pequenas conquistas que, somadas, constroem grandes histórias.", "category": "Motivação"},
+      {"text": "L A vida é feita de pequenas conquistas que, somadas, constroem grandes histórias.", "category": "Motivação"},
       {"text": "Compartilhar é multiplicar alegria. Quando espalhamos boas palavras e gestos sinceros, o mundo ao nosso redor também se ilumina.", "category": "Bondade"},
       {"text": "Gratidão transforma o que temos em suficiente, e o que vivemos em aprendizado.", "category": "Gratidão"},
       {"text": "Pequenos atos de bondade têm o poder de transformar o dia de alguém.", "category": "Bondade"},
@@ -12,11 +12,18 @@ String getMockPhrasesJson() {
   ''';
 }
 
+String? _overridePhrasesJson;
+String? _overrideImagesJson;
+
+void setOverridePhrasesJson(String? json) => _overridePhrasesJson = (json?.trim().isEmpty ?? true) ? null : json;
+void setOverrideImagesJson(String? json) => _overrideImagesJson = (json?.trim().isEmpty ?? true) ? null : json;
+
+
 String getMockImagesJson() {
-  return '''
+  return _overrideImagesJson ?? '''
   {
     "images": [
-      {"url": "https://picsum.photos/400?image=10", "category": "Paisagem"},
+      {"url": "https://picsum.photos/400?image=10", "category": "Paisagem 1"},
       {"url": "https://picsum.photos/400?image=20", "category": "Animais"},
       {"url": "https://picsum.photos/400?image=30", "category": "Paisagem"},
       {"url": "https://picsum.photos/400?image=40", "category": "Arte"},
