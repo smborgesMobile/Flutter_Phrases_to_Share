@@ -67,23 +67,59 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_GROUPS: ${{ secrets.FIREBASE_GROUPS }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          if [ -z "$FIREBASE_TOKEN" ] || [ -z "$FIREBASE_APP_ID" ]; then
-            echo "FIREBASE_TOKEN and FIREBASE_APP_ID must be set as repository secrets" >&2
+          if [ -z "$FIREBASE_APP_ID" ]; then
+            echo "FIREBASE_APP_ID must be set as a repository secret" >&2
             exit 1
           fi
           echo "Distributing AAB to Firebase App Distribution..."
+          # Prefer service account JSON if provided (recommended). Accept raw JSON or base64-encoded JSON.
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "Using service account authentication via GOOGLE_APPLICATION_CREDENTIALS"
+            mkdir -p ~/.config/firebase
+            # Detect if variable is base64 (contains typical base64 chars and no JSON braces) or raw JSON
+            if echo "$FIREBASE_SERVICE_ACCOUNT" | jq -e . >/dev/null 2>&1; then
+              echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-service-account.json
+            else
+              echo "$FIREBASE_SERVICE_ACCOUNT" | base64 --decode > /tmp/firebase-service-account.json || {
+                # if decode fails, try saving raw value
+                echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-service-account.json
+              }
+            fi
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-service-account.json
+          else
+            if [ -z "$FIREBASE_TOKEN" ]; then
+              echo "Either FIREBASE_SERVICE_ACCOUNT (preferred) or FIREBASE_TOKEN must be set as repository secrets" >&2
+              exit 1
+            fi
+            echo "FIREBASE_SERVICE_ACCOUNT not provided — falling back to FIREBASE_TOKEN (deprecated)"
+          fi
           # Build path
           AAB_PATH=build/app/outputs/bundle/release/app-release.aab
           if [ ! -f "$AAB_PATH" ]; then
             echo "AAB not found at $AAB_PATH" >&2
             exit 1
           fi
-          # If FIREBASE_GROUPS is set, pass --groups, otherwise skip
+          # If FIREBASE_GROUPS is set, pass --groups, otherwise skip. If using service account, omit --token.
+          CMD=(firebase appdistribution:distribute "$AAB_PATH" --app "$FIREBASE_APP_ID" --release-notes "CI build $GITHUB_SHA")
           if [ -n "$FIREBASE_GROUPS" ]; then
-            firebase appdistribution:distribute "$AAB_PATH" --app "$FIREBASE_APP_ID" --groups "$FIREBASE_GROUPS" --token "$FIREBASE_TOKEN" --release-notes "CI build $GITHUB_SHA"
+            CMD+=(--groups "$FIREBASE_GROUPS")
+          fi
+          if [ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+            CMD+=(--token "$FIREBASE_TOKEN")
+          fi
+          # Run the command and capture output
+          if ! OUTPUT=$("${CMD[@]}" 2>&1); then
+            echo "Firebase CLI failed:" >&2
+            echo "$OUTPUT" >&2
+            # Detect common cause: project not linked to Play
+            if echo "$OUTPUT" | grep -q "This project is not linked to a Google Play account"; then
+              echo "ERROR: Firebase project is not linked to a Google Play account. To distribute Android apps via App Distribution, link your Firebase project to the Play Console or upload the app via Play Console. See: https://firebase.google.com/docs/app-distribution/android/distribute-cli#link_firebase_project_to_play_console" >&2
+            fi
+            exit 1
           else
-            firebase appdistribution:distribute "$AAB_PATH" --app "$FIREBASE_APP_ID" --token "$FIREBASE_TOKEN" --release-notes "CI build $GITHUB_SHA"
+            echo "$OUTPUT"
           fi
 
       # Optional: Upload the AAB as an artifact
