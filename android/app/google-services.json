@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:697771277947:android:31e10b3130efdd2425acde",
         "android_client_info": {
-          "package_name": "com.example.phrases_to_share"
+          "package_name": "com.smborges.phrases_to_share"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "697771277947-88nvt0iaj4kpnj65eg1g9eofo2o9u40a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.phrases_to_share",
+            "package_name": "com.smborges.phrases_to_share",
             "certificate_hash": "66be8c306cba5da61646e00ce4159542142bd7ba"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "697771277947-8tvicd5gqs4cchqa7no9ukgmn6dur9iu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.phrases_to_share",
+            "package_name": "com.smborges.phrases_to_share",
             "certificate_hash": "0d3200a116e390015cdcfa6642e12c0bb457cc56"
           }
         },

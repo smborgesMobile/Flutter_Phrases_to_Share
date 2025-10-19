@@ -9,7 +9,7 @@ import java.util.Properties
 import java.io.FileInputStream
 
 android {
-    namespace = "com.example.phrases_to_share"
+    namespace = "com.smborges.phrases_to_share"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.phrases_to_share"
+    applicationId = "com.smborges.phrases_to_share"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
