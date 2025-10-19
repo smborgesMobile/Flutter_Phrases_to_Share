@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
     name: Build Flutter Release Bundle
@@ -16,7 +17,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.0'
+          flutter-version: '3.35.6'  # Updated to fix Dart SDK version issue
 
       - name: Install Dependencies
         run: flutter pub get
