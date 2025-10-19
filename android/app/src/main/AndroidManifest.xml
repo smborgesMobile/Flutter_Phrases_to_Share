@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="phrases_to_share"
+        android:label="Mensagens Prontas"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
